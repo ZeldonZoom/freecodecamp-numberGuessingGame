@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PSQL="psql --username=freecodecamp --dbname=table -t --no-align -c"
+PSQL="psql --username=postgres --dbname=number_guess -t --no-align -c"
 
 COUNT=0
 RANDOM_NUMBER=$(( ($RANDOM % 1000) + 1 ))
@@ -9,12 +9,13 @@ echo $RANDOM_NUMBER
 echo Enter your username:
 read USERNAME
 
-$GET_USER=$($PSQL "select * from users where username='$USERNAME'")
+GET_USER=$($PSQL "select user_id from users where username='$USERNAME';")
 if [[ -z $GET_USER ]]
 then
   echo Welcome, $USERNAME! It looks like this is your first time here.
 else
-  echo Welcome back, $GET_USER! You have played games, and your best game took <number of guesses> guesses.
+  GET_BEST_GUESS=$($PSQL "select guess from games where user_id=$GET_USER order by guess limit 1;")
+  echo Welcome back, $GET_USER! You have played games, and your best game took $GET_BEST_GUESS guesses.
 fi
 
 while true
@@ -23,9 +24,8 @@ do
   read INPUT
 
   if ! [[ $INPUT =~ ^-?[0-9]+$ ]]; then
-    echo "That is not an integer, guess again. "
+    echo "That is not an integer, guess again:"
   else
-    if [[ $INPUT >> $RANDOM ]]
-    then
-       
+    
+  fi
 done
