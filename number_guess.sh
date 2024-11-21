@@ -4,7 +4,7 @@ PSQL="psql --username=postgres --dbname=number_guess -t --no-align -c"
 
 NUMBER_OF_GUESSES=0
 SECRET_NUMBER=$(( $RANDOM % 1000 + 1 ))
-echo $RANDOM_NUMBER
+
 
 echo "Enter your username:"
 read USERNAME
@@ -18,9 +18,9 @@ then
 else
   
   # echo $USER_ID $USER
-  BEST_GAME=$($PSQL "select guesses from users left join games on users.user_id=games.user_id where username='$GET_USER' order by guesses limit 1;")
-  GAMES_PLAYED=$($PSQL "select count(guesses) from users left join games on users.user_id=games.user_id where username='arnav';")
-  echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
+  BEST_GAME=$($PSQL "select guesses from users left join games on users.user_id=games.user_id where username='$USERNAME' order by guesses limit 1;")
+  GAMES_PLAYED=$($PSQL "select count(game_id) from users left join games on users.user_id=games.user_id where username='$USERNAME';")
+  echo "Welcome back, $GET_USER! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
 
 while true
