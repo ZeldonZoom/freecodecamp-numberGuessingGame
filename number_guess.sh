@@ -10,14 +10,14 @@ echo "Enter your username:"
 read USERNAME
 
 GET_USER=$($PSQL "select * from users where username='$USERNAME';")
-echo $GET_USER
+# echo $GET_USER
 if [[ -z $GET_USER ]]
 then
   echo "Welcome, $USERNAME! It looks like this is your first time here."
   ADD_USER=$($PSQL "insert into users(username) values('$USERNAME')")
 else
   IFS='|' read -r USER_ID USER <<< "$GET_USER"
-  echo $USER_ID $USER
+  # echo $USER_ID $USER
   GET_BEST_GUESS=$($PSQL "select guesses from users left join games on users.user_id=games.user_id where username='$GET_USER' order by guesses limit 1;")
   echo "Welcome back, $USER! You have played games, and your best game took $GET_BEST_GUESS guesses."
 fi
