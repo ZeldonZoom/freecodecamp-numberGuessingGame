@@ -9,7 +9,7 @@ SECRET_NUMBER=$(( $RANDOM % 1000 + 1 ))
 echo "Enter your username:"
 read USERNAME
 
-GET_USER=$($PSQL "select username from users where username='$USERNAME';")
+GET_USER=$($PSQL "select user_id from users where username='$USERNAME';")
 # echo $GET_USER
 if [[ -z $GET_USER ]]
 then
@@ -18,9 +18,10 @@ then
 else
   
   # echo $USER_ID $USER
-  BEST_GAME=$($PSQL "select guesses from users left join games on users.user_id=games.user_id where username='$USERNAME' order by guesses limit 1;")
-  GAMES_PLAYED=$($PSQL "select count(game_id) from users left join games on users.user_id=games.user_id where username='$USERNAME';")
-  echo "Welcome back, $GET_USER! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
+  BEST_GAME=$($PSQL "select min(guesses) from games where user_id='$GET_USER';")
+  
+  GAMES_PLAYED=$($PSQL "select count(game_id) from games where user_id='$GET_USER';")
+  echo Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses.
 fi
 
 while true
@@ -38,7 +39,7 @@ do
     elif [ $INPUT -lt $SECRET_NUMBER ]; then
       echo "It's higher than that, guess again:"
     else
-      echo "You guessed it in $NUMBER_OF_GUESSES tries. The secret number was $SECRET_NUMBER. Nice job!"
+      echo You guessed it in $NUMBER_OF_GUESSES tries. The secret number was $SECRET_NUMBER. Nice job!
       GET_ID=$($PSQL "select user_id from users where username='$USERNAME';")
       ADD_GAME=$($PSQL "insert into games(user_id, guesses) values($GET_ID, $NUMBER_OF_GUESSES)")
       break
