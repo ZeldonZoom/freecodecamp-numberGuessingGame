@@ -23,10 +23,10 @@ else
   GAMES_PLAYED=$($PSQL "select count(game_id) from games where user_id='$GET_USER';")
   echo Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses.
 fi
-
+echo "Guess the secret number between 1 and 1000:"
 while true
 do
-  echo "Guess the secret number between 1 and 1000:"
+  
   read INPUT
 
   if ! [[ $INPUT =~ ^-?[0-9]+$ ]]; then
